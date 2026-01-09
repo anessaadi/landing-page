@@ -321,21 +321,7 @@ document.getElementById("purchase-form").addEventListener("submit", () => {
 });
 
 
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Orders");
 
-  sheet.appendRow([
-    new Date(),
-    e.parameter.name,
-    e.parameter.phone,
-    e.parameter.wilaya,
-    e.parameter.baladiya,
-    e.parameter.quantity,
-    e.parameter.price
-  ]);
-
-  return ContentService.createTextOutput("success");
-}
     // JSON Data for Algeria (Sample - Add more as needed)
     const algeriaData = {
         "01-أدرار": ["أدرار", "أكابلي", "أولف", "بودة", "فنوغيل", "إن زغمير", "أولاد أحمد تيمي", "رقان", "سالي", "سبع", "تمنطيط", "تمست", "تيمكتن", "تيت", "تسابيت", "زاوية كنتة"],
