@@ -240,27 +240,8 @@
             <div class="price-tag" id="display-price">3900 دج</div>
             <p style="color: blue; font-size: 0.9rem; margin-top: 10px;">تذكير! نبيع المخطوطة بدون إطار</p>
         </div>
-
-        <form 
-        id="purchase-form"
-        action="https://script.google.com/macros/s/AKfycbx2Ur6jMHX9QcW6nOMVcAV4DVQ8DsmXOIbFb0ZfcVlw8xNPHg8twrIx8hd5nNdqfy5q/exec"
-        method="POST"
-        target="hidden_iframe"
-        onsubmit="submitted=true;"
-        >
-
-
-
-
-        
-
-
-
-
-
-
-
-
+    
+    <form id="purchase-form">
 
             <!-- https://script.google.com/macros/s/AKfycbx2Ur6jMHX9QcW6nOMVcAV4DVQ8DsmXOIbFb0ZfcVlw8xNPHg8twrIx8hd5nNdqfy5q/exec -->
             <input type="hidden" name="quantity" id="final-qty" value="1">
@@ -311,15 +292,48 @@
 // }
 let submitted = false;
 
-document.getElementById("purchase-form").addEventListener("submit", () => {
-  setTimeout(() => {
-    if (submitted) {
-      alert("✅ تم إرسال طلبك بنجاح");
-      document.getElementById("purchase-form").reset();
-    }
-  }, 800);
-});
+document.getElementById("purchase-form").addEventListener("submit", function(e) {
+    e.preventDefault(); // Stop the page from reloading
 
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerText = "جاري الإرسال...";
+
+    // Prepare the data object
+    const data = {
+        name: document.querySelector('input[name="name"]').value,
+        phone: document.querySelector('input[name="phone"]').value,
+        wilaya: document.getElementById("wilaya").value,
+        baladiya: document.getElementById("baladiya").value,
+        quantity: document.getElementById("final-qty").value,
+        price: document.getElementById("display-price").innerText
+    };
+
+    // Replace this URL with your NEW Deployment URL from Apps Script
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwCkWvY3a7fdPZ35a_sERB_GWPfeY18pOeBgFTBt2SLwgNk4rvT32jAXcxAT1WtY8JuZg/exec";
+
+    fetch(scriptURL, {
+        method: "POST",
+        mode: "no-cors", // This is important for Google Apps Script
+        cache: "no-cache",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    })
+    .then(() => {
+        alert("✅ تم إرسال طلبك بنجاح، سنتصل بك قريبًا");
+        document.getElementById("purchase-form").reset();
+        submitBtn.disabled = false;
+        submitBtn.innerText = "تأكيد الطلب الآن";
+    })
+    .catch((error) => {
+        alert("❌ حدث خطأ، حاول مرة أخرى");
+        console.error('Error!', error.message);
+        submitBtn.disabled = false;
+        submitBtn.innerText = "تأكيد الطلب الآن";
+    });
+});
 
 
     // JSON Data for Algeria (Sample - Add more as needed)
